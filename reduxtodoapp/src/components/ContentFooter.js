@@ -1,4 +1,4 @@
-import React, { act } from 'react'
+import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { changeActiveFilter, clearCompleted, selectTodos, selectActiveFilter } from '../redux/todos/todosSlice';
 
@@ -22,7 +22,7 @@ function ContentFooter() {
 				<ul className="filters">
 					<li>
 						<a href="#/"
-							className={activeFilter == 'all' ? 'selected' : ''}
+							className={activeFilter === 'all' ? 'selected' : ''}
 							onClick={() => dispatch(changeActiveFilter('all'))}
 						>
 							All
@@ -30,7 +30,7 @@ function ContentFooter() {
 					</li>
 					<li>
 						<a href="#/"
-							className={activeFilter == 'active' ? 'selected' : ''}
+							className={activeFilter === 'active' ? 'selected' : ''}
 							onClick={() => dispatch(changeActiveFilter('active'))}
 						>
 							Active
@@ -39,7 +39,7 @@ function ContentFooter() {
 					</li>
 					<li>
 						<a href="#/"
-							className={activeFilter == 'completed' ? 'selected' : ''}
+							className={activeFilter === 'completed' ? 'selected' : ''}
 							onClick={() => dispatch(changeActiveFilter('completed'))}
 						>
 							Completed
