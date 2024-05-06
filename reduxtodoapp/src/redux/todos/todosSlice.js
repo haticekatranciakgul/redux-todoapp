@@ -1,21 +1,23 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { nanoid } from '@reduxjs/toolkit';
+import { createSlice, nanoid, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+
+axios.defaults.baseURL = "http://localhost:7002";
+
+
+export const getTodosAsync = createAsyncThunk(
+    "todos/getTodosAsync",
+    async () => {
+      const res = await axios("/todos");
+      return res.data;
+    }
+  );
 
 export const todosSlice = createSlice({
     name: 'todos',
     initialState: {
-        items: [
-            {
-                id: "1",
-                title: "Learn React",
-                completed: true,
-            },
-            {
-                id: "2",
-                title: "read book React",
-                completed: false,
-            }
-        ],
+        items: [],
+        isLoading: false,
+        error: null,
         activeFilter: 'all',
 
     },
@@ -26,7 +28,7 @@ export const todosSlice = createSlice({
             },
             prepare: ({ title }) => {
                 return {
-                    payload : {
+                    payload: {
                         id: nanoid(),
                         completed: false,
                         title,
@@ -52,6 +54,39 @@ export const todosSlice = createSlice({
             state.items = filtered;
         },
     },
+    // extraReducers: {
+    //     [getTodosAsync.pending] : (state, action) => {
+    //         state.isLoading = true;
+    //     },
+    //     [getTodosAsync.fulfilled]: (state, action) => {
+    //         state.items = action.payload;
+    //         state.isLoading = false;
+    //     },
+    //     [getTodosAsync.rejected]: (state, action) => {
+    //         state.isLoading =false;
+    //         state.error = action.error.message;
+    //     }
+    // },
+    extraReducers: (builder) => {
+        // get todos
+        builder.addCase(getTodosAsync.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(getTodosAsync.fulfilled, (state, action) => {
+            state.items = action.payload;
+            state.isLoading = false;
+        });
+        builder.addCase(getTodosAsync.rejected, (state, action) => {
+            state.error = action.error.message;
+            state.isLoading = false;
+        });
+
+       
+
+    }
+
+
+
 });
 
 export const selectTodos = (state) => state.todos.items;
