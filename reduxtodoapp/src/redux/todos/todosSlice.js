@@ -51,6 +51,5 @@ export const selectFilteredTodos = (state) => {
         state.todos.activeFilter === 'active' ? todo.completed === false : todo.completed === true
     )
 }
-
 export const { addTodo, toggle, destroy, changeActiveFilter, clearCompleted } = todosSlice.actions;
 export default todosSlice.reducer;
