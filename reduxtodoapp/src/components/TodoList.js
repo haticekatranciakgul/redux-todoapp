@@ -25,7 +25,7 @@ function TodoList() {
         return <Loading/>
     }
     if(error) {
-        return <Error/>
+        return <Error message = {error}/>
     }
     if(error) {
         return <Error message={error}/>
@@ -36,9 +36,9 @@ function TodoList() {
 
         <ul className="todo-list">
             {
-                filteredTodos.map((item) => (
+                filteredTodos.map((item,index) => (
 
-                    <li key={item.id} className={item.completed ? 'completed' : ''}>
+                    <li key={index} className={item.completed ? 'completed' : ''}>
                         <div className="view">
                             <input
                                 className="toggle"
