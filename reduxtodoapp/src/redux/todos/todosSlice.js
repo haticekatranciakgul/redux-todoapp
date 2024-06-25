@@ -1,13 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:7002";
+// axios.defaults.baseURL = "http://localhost:7002";
 
 
 export const getTodosAsync = createAsyncThunk(
     "todos/getTodosAsync",
     async () => {
-        const res = await axios("/todos");
+        const res = await axios(`${process.env.REACT_APP_API_BASE_ENDPOINT}/todos`);
         return res.data;
     }
 );
@@ -15,7 +15,7 @@ export const getTodosAsync = createAsyncThunk(
 export const addTodosAsync = createAsyncThunk(
     "todos/addTodosAsync",
     async (data) => {
-        const res = await axios("/todos", data);
+        const res = await axios.post(`${process.env.REACT_APP_API_BASE_ENDPOINT}/todos`, data);
         return res.data;
     }
 );
