@@ -17,7 +17,7 @@ function TodoList() {
 
     const handleDestroy = async (id) => {
         if (window.confirm('Are you sure?')) {
-            dispatch(removeTodoAsync(id))
+           await dispatch(removeTodoAsync(id))
         }
     };
 
