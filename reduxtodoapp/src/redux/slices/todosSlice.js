@@ -46,11 +46,16 @@ export const todosSlice = createSlice({
       state.addNewTodo.isLoading = false
     })
     //todos TOGGLE
-    builder.addCase(toggleTodoAsync.fulfilled, (state,action) => {
-      const {id, completed} = action.payload
-      const index = state.items.findIndex(item => item.id === id)
-      state.items[index].completed = completed
-    })
+    builder.addCase(toggleTodoAsync.fulfilled, (state, action) => {
+      const updatedTodo = action.payload; // Backend'den dönen güncellenmiş todo
+      const index = state.items.findIndex(item => item.id === updatedTodo.id);
+    
+      if (index !== -1) {
+        state.items[index] = updatedTodo; // Tüm todo'yu günceller.
+      } else {
+        console.error("Todo not found in state.items:", updatedTodo);
+      }
+    });
     //todos DELETE
     builder.addCase(removeTodoAsync.fulfilled, (state, action) => {
       const id = action.payload
@@ -69,15 +74,18 @@ export const todosSlice = createSlice({
 
 export const selectTodos = (state) => state.todos.items
 export const selectFilteredTodos = (state) => {
+  if (!state.todos.items) return []; // Eğer items yoksa boş dizi döndür
   if (state.todos.activeFilter === 'All') {
-    return state.todos.items
+    return state.todos.items;
   }
-  return state.todos.items.filter((todo) =>
+
+  return state.todos.items.filter(todo =>
     state.todos.activeFilter === 'Active'
-      ? todo.completed === false
-      : todo.completed === true
-  )
-}
+      ? !todo.completed
+      : todo.completed
+  );
+};
+
 export const selectActiveFilter = (state) => state.todos.activeFilter
 
 export const {changeActiveFilter, clearCompleted } =

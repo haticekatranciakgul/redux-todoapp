@@ -1,7 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createSlice } from "@reduxjs/toolkit";
 
-import { getTodosAsync, addTodosAsync, toggleTodoAsync, removeTodoAsync} from './services';
+import { getTodosAsync, addTodosAsync, toggleTodoAsync,removeTodoAsync} from './services';
 
 
 export const todosSlice = createSlice({
@@ -60,6 +59,19 @@ export const todosSlice = createSlice({
             state.addNewTodo.error = action.error.message;
             state.addNewTodo.isLoading = action.error.message;
         });
+        //todos TOGGLE
+    builder.addCase(toggleTodoAsync.fulfilled, (state,action) => {
+        const {id, completed} = action.payload
+        const index = state.items.findIndex(item => item.id === id)
+        state.items[index].completed = completed
+      })
+      builder.addCase(removeTodoAsync.fulfilled, (state, action) => {
+        const id = action.payload
+        const filtered = state.items.filter((item) => item.id !== id)
+        state.items = filtered
+        /* const index = state.items.findIndex((item) => item.id === id)
+        state.items.splice(index,1) */
+      })
         // //toggle todo
         // [toggleTodoAsync.fulfilled] (state, action) => {
         //      const {id, completed} = action.payload;

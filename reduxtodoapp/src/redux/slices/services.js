@@ -14,10 +14,21 @@ export const getTodoAsync = createAsyncThunk(
     return res.data
   })
   
-  export const toggleTodoAsync= createAsyncThunk('todos/toggleTodoAsync',async({id,data}) => {
-    const res =await axios.patch(`${process.env.REACT_APP_API_BASE_ENDPOINT}/todos/${id}`, data)
-    return res.data
-  })
+  export const toggleTodoAsync = createAsyncThunk('todos/toggleTodoAsync', async ({ id, data }) => {
+    const response = await fetch(`${process.env.REACT_APP_API_BASE_ENDPOINT}/todos/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  
+    if (!response.ok) {
+      throw new Error('Failed to toggle todo');
+    }
+  
+    const updatedTodo = await response.json();
+    console.log('Updated todo:', updatedTodo); // API'den dönen yanıt
+    return updatedTodo;
+  });
   
   export const removeTodoAsync = createAsyncThunk("todos/removeTodoAsync", async (id) => {
     await axios.delete(`${process.env.REACT_APP_API_BASE_ENDPOINT}/todos/${id}`)
